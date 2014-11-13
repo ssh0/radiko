@@ -11,6 +11,7 @@ import base64
 import subprocess
 import sys
 import os
+import io
 
 
 class Radiko(object):
@@ -94,8 +95,7 @@ class Radiko(object):
 
         if self.test:
             s = (self.authtoken, offset, length, self.partialkey)
-            print "authtoken: %s \noffset: %s length: %s \npartialkey: %s" % s
-
+            print "authtoken: %s \noffset: %s length: %s\npartialkey: %s" % s
     def get_auth2(self):
         '''access auth2_fms'''
         auth_success_responce = {}
@@ -120,14 +120,13 @@ class Radiko(object):
             sys.exit()
 
         if self.test:
-            print "auth_success_responce: ", auth_success_responce
+            print "auth_success_responce:", auth_success_responce
 
         area = auth_success_responce["body"].strip().split(",")
         if not self.areaid:
             self.areaid = area[0]
 
         return self.areaid
-        
 
     def get_stream_url(self):
         '''get stream url'''
@@ -140,7 +139,7 @@ class Radiko(object):
         try:
             body = urllib2.urlopen(channel_url).read()
         except:
-            print "error in to get %s" % tmp_xml
+            print "error in to get", tmp_xml
             sys.exit()
         with open(tmp_xml, 'w') as f:
             f.write(body)
@@ -172,10 +171,10 @@ class Radiko(object):
         play_cmd = 'rtmpdump --quiet --rtmp %s --app %s --playpath %s --swfVfy %s -C S:"" -C S:"" -C S:"" -C S:%s --live' % options
 
         p1 = subprocess.Popen(play_cmd.strip().split(" "), stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(["mplayer", "-"], stdin=p1.stdout)
+        p2 = subprocess.Popen(["mplayer", "-"], stdin=p1.stdout, bufsize=-1)
         p1.stdout.close()
         try:
-            output = p2.communicate()[0]
+            return p2.communicate()[0]
         except KeyboardInterrupt:
             print "KeyboardInterrupt: Exiting ...\n"
 
@@ -188,11 +187,10 @@ if __name__ == "__main__":
     app.get_auth1()
     app.get_auth2()
     app.get_channels()
-    
     app.set_channel()
     if not app.channel in app.channels:
-        print "station %s is not available." % app.channel
+        print("station {0} is not available.".format(app.channel))
         app.show_channel()
-    
+
     app.get_stream_url()
     app.play()
