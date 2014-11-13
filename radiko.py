@@ -37,19 +37,20 @@ class Radiko(object):
         "| xmllint --format --xpath //station/@id - " +
         "| ruby -ne 'puts $_.split ' " , shell=True
         )
-    
+
     def show_channel(self):
         print
         print self.channels
         self.channel = raw_input("select a channel: ")
         self.set_channel()
-    
+
     def set_channel(self):
         if not self.channel:
             self.show_channel()
         if not self.channel in self.channels:
             print "station %s is not available." % self.channel
             self.show_channel()
+        print "selected channnel: %s\n" % self.channel
 
     def get_player(self):
         '''get player'''
@@ -135,7 +136,7 @@ class Radiko(object):
         if not self.areaid:
             self.areaid = area[0]
 
-        print "\narea_id:", self.areaid
+        print "area_id: %s\n" % self.areaid
 
     def get_stream_url(self):
         '''get stream url'''
@@ -153,24 +154,23 @@ class Radiko(object):
         with open(tmp_xml, 'w') as f:
             f.write(body)
 
-        cmd = "xmllint %s.xml --xpath /url/item[1]/text() " % self.channel
+        cmd = "xmllint %s --xpath /url/item[1]/text() " % tmp_xml
         stream_url = subprocess.check_output(cmd.strip().split(" "))
 
         if self.test:
-            print "stream_url: ", stream_url
+            print "stream_url:", stream_url
 
         cmd = "echo '%s' | perl -pe 's!^(.*)://(.*?)/(.*)/(.*?)$/!$1://$2 $3 $4!'" % stream_url
 
         if self.test:
-            print "cmd: ", cmd
+            print "cmd:", cmd
 
         ret = subprocess.check_output(cmd, shell=True)
         self.url_parts = ret.split(" ")
         os.remove(tmp_xml)
 
     def play(self):
-        print
-        print "player start"
+        print "player start!\n"
         options = (
             self.url_parts[0],
             self.url_parts[1],
@@ -178,7 +178,7 @@ class Radiko(object):
             playerurl,
             self.authtoken
         )
-        play_cmd = 'rtmpdump -q -r %s --app %s --playpath %s -W %s -C S:"" -C S:"" -C S:"" -C S:%s --live' % options
+        play_cmd = 'rtmpdump --quiet --rtmp %s --app %s --playpath %s --swfVfy %s -C S:"" -C S:"" -C S:"" -C S:%s --live' % options
 
         p1 = subprocess.Popen(play_cmd.strip().split(" "), stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["mplayer", "-"], stdin=p1.stdout)
@@ -186,7 +186,8 @@ class Radiko(object):
         try:
             output = p2.communicate()[0]
         except KeyboardInterrupt:
-            print "Exit ..."
+            print "KeyboardInterrupt: Exiting ...\n"
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -209,7 +210,6 @@ if __name__ == "__main__":
                         help='verbose (debug) mode',
                         action='store_true'
                         )
+
     args = parser.parse_args()
-
     app = Radiko(args)
-
