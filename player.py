@@ -16,11 +16,11 @@ class Player(Gtk.Window):
         self.display()
 
     def setupwindow(self):
-        Gtk.Window.__init__(self, title="radiko player")
-        self.set_default_size(400, 300)
+        Gtk.Window.__init__(self, title="radiko")
+        self.set_default_size(260, 240)
         hb = Gtk.HeaderBar()
         hb.props.show_close_button = True
-        hb.props.title = "radiko player"
+        hb.props.title = "radiko"
         self.set_titlebar(hb)
 
         button = Gtk.Button()
@@ -28,7 +28,7 @@ class Player(Gtk.Window):
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
         button.add(image)
         button.connect('clicked', self.connect_server)
-        hb.pack_end(button)
+        hb.pack_start(button)
 
         self.button = Gtk.Button()
         icon = Gio.ThemedIcon(name="media-playback-start")
