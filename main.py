@@ -169,7 +169,6 @@ class Radiko(object):
             self.authtoken
         )
         play_cmd = 'rtmpdump --quiet --rtmp %s --app %s --playpath %s --swfVfy %s -C S:"" -C S:"" -C S:"" -C S:%s --live' % options
-        print play_cmd
 
         p1 = subprocess.Popen(play_cmd.strip().split(" "), stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["mplayer", "-"], stdin=p1.stdout, bufsize=-1)
