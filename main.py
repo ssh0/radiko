@@ -171,7 +171,7 @@ class Radiko(object):
         play_cmd = 'rtmpdump --quiet --rtmp %s --app %s --playpath %s --swfVfy %s -C S:"" -C S:"" -C S:"" -C S:%s --live' % options
 
         p1 = subprocess.Popen(play_cmd.strip().split(" "), stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(["mplayer", "-"], stdin=p1.stdout, bufsize=-1)
+        p2 = subprocess.Popen(["mpv", "-"], stdin=p1.stdout, bufsize=-1)
         p1.stdout.close()
         try:
             return p2.communicate()[0]
