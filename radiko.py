@@ -32,15 +32,15 @@ if __name__ == "__main__":
                         )
 
     args = parser.parse_args()
-    area_id = args.areaid
-    station_id = args.channel
     gui = args.gui
     app = Radiko()
+    app.areaid = args.areaid
+    app.channel = args.channel
     app.test = args.verbose
     app.get_player()
     app.get_keydata()
     if gui:
-        player = Player(app, area_id, station_id)
+        player = Player(app, app.areaid, app.channel)
     else:
         app.get_auth1()
         app.get_auth2()
