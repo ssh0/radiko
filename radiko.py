@@ -22,7 +22,10 @@ if __name__ == "__main__":
                         default=None,
                         help='(OPTIONAL) FM channel'
                         )
-
+    parser.add_argument('--gui',
+                        help='Set the option for gui',
+                        action='store_true'
+                        )
     parser.add_argument('-v', '--verbose',
                         help='verbose (debug) mode',
                         action='store_true'
@@ -31,9 +34,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
     area_id = args.areaid
     station_id = args.channel
+    gui = args.gui
     app = Radiko()
     app.test = args.verbose
     app.get_player()
     app.get_keydata()
-    player = Player(app, area_id, station_id)
+    if gui:
+        player = Player(app, area_id, station_id)
+    else:
+        app.get_auth1()
+        app.get_auth2()
+        app.get_channels()
+        app.set_channel()
+        if not app.channel in app.channels:
+            print("station {0} is not available.".format(app.channel))
+            app.show_channel()
+        app.get_stream_url()
+        app.play()
 

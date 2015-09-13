@@ -20,6 +20,7 @@ class Radiko(object):
         self.test = False
         self.areaid = None
         self.channel = None
+        self.nogui = False
 
     def get_channels(self):
         self.channels = subprocess.check_output(
