@@ -2,8 +2,8 @@
 # -*- coding:utf-8 -*-
 
 playerurl = "http://radiko.jp/player/swf/player_3.0.0.01.swf"
-playerfile = "/home/shotaro/Workspace/python/radiko/tmp.swf"
-keyfile = "/home/shotaro/Workspace/python/radiko/tmp.png"
+playerfile = "tmp.swf"
+keyfile = "tmp.png"
 
 import urllib
 import urllib2
@@ -131,7 +131,7 @@ class Radiko(object):
 
     def get_stream_url(self):
         '''get stream url'''
-        tmp_xml = "/home/shotaro/Workspace/python/radiko/%s.xml" % self.channel
+        tmp_xml = "%s.xml" % self.channel
         if os.path.exists(tmp_xml):
             os.remove(tmp_xml)
 
