@@ -2,8 +2,6 @@
 # -*- coding:utf-8 -*-
 
 playerurl = "http://radiko.jp/player/swf/player_3.0.0.01.swf"
-playerfile = "tmp.swf"
-keyfile = "tmp.png"
 
 import urllib
 import urllib2
@@ -13,6 +11,9 @@ import sys
 import os
 import io
 
+source_dir = os.path.abspath(os.path.dirname(__file__))
+playerfile = os.path.join(source_dir, "tmp.swf")
+keyfile = os.path.join(source_dir, "tmp.png")
 
 class Radiko(object):
 
@@ -132,6 +133,7 @@ class Radiko(object):
     def get_stream_url(self):
         '''get stream url'''
         tmp_xml = "%s.xml" % self.channel
+        tmp_xml = os.path.join(source_dir, tmp_xml)
         if os.path.exists(tmp_xml):
             os.remove(tmp_xml)
 
